@@ -63,7 +63,6 @@ class Matrix {
     return this.matrix[i][j]
   }
 
-
   [Symbol.iterator](){
     let index = 0;
     return {

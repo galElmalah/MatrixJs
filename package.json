@@ -2,14 +2,23 @@
   "name": "easy-matrix",
   "version": "1.1.0",
   "description": "",
+  "homepage": "https://github.com/galElmalah/easy-matrix",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "algebra",
+    "linear",
+    "linear algebra",
+    "matrix",
+    "matrices",
+    "math",
+    "vectors"
+  ],
+  "author": "Gal Elmalah",
+  "email": "galelmalah@gmail.com",
   "devDependencies": {
     "eslint-config-google": "^0.14.0",
     "jest": "^25.1.0"
