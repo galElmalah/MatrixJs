@@ -6,7 +6,7 @@ describe('Matrix', () => {
     const column = 4;
     const matrix = new Matrix(rows,column);
     expect(matrix.size).toEqual([rows,column])
-    expect(matrix.build()).toEqual([[1,1,1,1],[1,1,1,1],[1,1,1,1]])
+    expect(matrix.matrix).toEqual([[1,1,1,1],[1,1,1,1],[1,1,1,1]])
   })
 
   it('should map the matrix correctly', () => {
@@ -14,7 +14,7 @@ describe('Matrix', () => {
     const column = 2;
     const matrix = new Matrix(rows,column, {mapper: (i,j) => `${i},${j}`});
     expect(matrix.size).toEqual([rows,column])
-    expect(matrix.build()).toEqual([['0,0', '0,1'], ['1,0', '1,1']])
+    expect(matrix.matrix).toEqual([['0,0', '0,1'], ['1,0', '1,1']])
   })
 })
 
@@ -37,7 +37,7 @@ describe('Matrix operations', () => {
       const additionResult = matrixOne.plus(matrixTwo);
       expect(additionResult).not.toBe(matrixTwo);
       expect(additionResult).not.toBe(matrixOne);
-      expect(additionResult.build()).toEqual([[2,2],[2,2]])
+      expect(additionResult.matrix).toEqual([[2,2],[2,2]])
     })
   
   })
@@ -59,7 +59,7 @@ describe('Matrix operations', () => {
         const additionResult = matrixOne.minus(matrixTwo);
         expect(additionResult).not.toBe(matrixTwo);
         expect(additionResult).not.toBe(matrixOne);
-        expect(additionResult.build()).toEqual([[0,0],[0,0]])
+        expect(additionResult.matrix).toEqual([[0,0],[0,0]])
     })
   })
 
