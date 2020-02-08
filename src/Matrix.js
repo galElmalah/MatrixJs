@@ -38,6 +38,23 @@ class Matrix {
     return this.size[0] === matrixTwo.size[0] && this.size[1] === matrixTwo.size[1]
   }
 
+  column(i) {
+    if(i<0 || i > this.columnsSize-1) {
+      throw new RangeError('Illegal indexes')
+    }
+    let column = [];
+    for(const row of this) {
+      column.push(row[i])
+    }
+    return column
+  }
+
+  row(i) {
+    if(i<0 || i > this.rowsSize - 1) {
+      throw new RangeError('Illegal indexes')
+    }
+    return [...this.matrix[i]]
+  }
 
   cell(i,j) {
     if(i < 0 || i > this.rowsSize -1|| j<0 || j > this.columnsSize-1) {
@@ -96,6 +113,36 @@ class Matrix {
     return new Matrix(m,n, {mapper})
   }
 
+  _matrixMultiplication(by) {
+    if(this.columnsSize !== by.rowsSize) {
+      throw new RangeError("Cannot multiply matrixes if the row and col sizes are not equal")
+    }
+
+    const mapper = (i,j) => {
+      const row = this.row(i);
+      const column = by.column(j)
+      const cell = row.reduce((acc,next,i) => acc + next*column[i],0)
+      return cell;
+    }
+
+    return new Matrix(this.rowsSize,by.columnsSize, {mapper})
+  }
+
+  multiply(by) {
+
+    if(typeof by === 'number') {
+      const [n,m] = this.size;
+      return new Matrix(n,m, {mapper: (i,j) => this.cell(i,j)*by})
+    }
+
+    if( by instanceof Matrix) {
+      return this._matrixMultiplication(by)
+    }
+
+    throw new TypeError('Cannot multiply with a value that inst a "number" or another Matrix')
+   
+  }
+
   toString() {
     let rows = []
     for(let i=0; i < this.rowsSize ; i++) {
@@ -110,7 +157,6 @@ class Matrix {
   }
 
 }
-
 
 
 module.exports.Matrix = Matrix;

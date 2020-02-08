@@ -16,6 +16,24 @@ describe('Matrix', () => {
     expect(matrix.size).toEqual([rows,column])
     expect(matrix.matrix).toEqual([['0,0', '0,1'], ['1,0', '1,1']])
   })
+
+  it('should return the correct column', () => {
+    const matrix = new Matrix(2,2, {mapper: (i,j) => `${i},${j}`});
+    expect(matrix.column(0)).toEqual(['0,0', '1,0'])
+    expect(matrix.column(1)).toEqual(['0,1', '1,1'])
+
+    expect(() =>matrix.column(-1)).toThrow(RangeError)
+    expect(() =>matrix.column(2)).toThrow(RangeError)
+  })
+
+  it('should return the correct row', () => {
+    const matrix = new Matrix(2,2, {mapper: (i,j) => `${i},${j}`});
+    expect(matrix.row(0)).toEqual(['0,0', '0,1'])
+    expect(matrix.row(1)).toEqual(['1,0', '1,1'])
+    
+    expect(() =>matrix.row(-1)).toThrow(RangeError)
+    expect(() =>matrix.row(2)).toThrow(RangeError)
+  })
 })
 
 describe('Matrix operations', () => {
@@ -112,6 +130,45 @@ describe('Matrix operations', () => {
       const transposed = mat.transpose();
       expect(transposed).not.toBe(mat)
       expect(transposed.build()).toEqual([[0,1],[1,2],[2,3]])
+    })
+  })
+
+  describe('Multiply' , () => {
+    it('should multiply each cell by a constant', () => {
+      const mat = new Matrix(2,2);
+      const by = 3
+      const newMat = mat.multiply(by);
+      expect(newMat.matrix).toEqual([[3,3],[3,3]]);
+    })
+
+    it('should multiply matrixes correctly', () => {
+      const first = [[1,2,3],[4,5,6]]
+      const second = [[7,8],[9,10],[11,12]]
+      const mat = new Matrix(2,3, {mapper: (i,j) => first[i][j]});
+      const by = new Matrix(3,2,{mapper: (i,j) => second[i][j]});
+      const result = mat.multiply(by);
+      expect(result.size).toEqual([2,2])
+      expect(result.matrix).toEqual([[58,64],[139,154]]);
+    })
+
+    it('should multiply with a vector correctly', () => {
+      const first = [[3,4,2]]
+      const second = [[13,9,7,15],[8,7,4,6], [6,4,0,3]]
+      const mat = new Matrix(1,3, {mapper: (i,j) => first[i][j]});
+      const by = new Matrix(3,4, {mapper: (i,j) => second[i][j]});
+      const result = mat.multiply(by);
+      expect(result.size).toEqual([1,4])
+      expect(result.matrix).toEqual([[83,63,37,75]]);
+    })
+
+    it('should throw RangeError when multiplying matrixes with wrong sizes', () => {
+      let mat = new Matrix(2,3);
+      let by = new Matrix(4,3);
+      expect(() => mat.multiply(by)).toThrow(RangeError)
+      mat = new Matrix(3,3);
+      by = new Matrix(4,2)
+      expect(() => mat.multiply(by)).toThrow(RangeError)
+
     })
   })
 
