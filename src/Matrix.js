@@ -46,6 +46,18 @@ class Matrix {
     return this.matrix[i][j]
   }
 
+
+  [Symbol.iterator](){
+    let index = 0;
+    return {
+      next: () => ({
+        value:  this.matrix[index++],
+        done: index > this.rowsSize
+      })
+    }
+  }
+
+
   plus(matrixTwo) {
     if(!this.hasTheSameSize(matrixTwo)) {
       throw new Error(`Mismatch matrix sizes.\ncannot add two matrixes of sizes: mat1 -> ${this.size} :::: mat2 -> ${matrixTwo.size}  `)
@@ -57,7 +69,7 @@ class Matrix {
 
   minus(matrixTwo) {
     if(!this.hasTheSameSize(matrixTwo)) {
-      throw new Error(`Mismatch matrix sizes.\ncannot add two matrixes of sizes: mat1 -> ${this.size} :::: mat2 -> ${matrixTwo.size}  `)
+      throw new Error(`Mismatch matrix sizes.\ncannot subtract two matrixes of sizes: mat1 -> ${this.size} :::: mat2 -> ${matrixTwo.size}  `)
     }
     const [n,m] = this.size;
     const mapper = (i,j) => this.cell(i,j) - matrixTwo.cell(i,j)
@@ -70,8 +82,15 @@ class Matrix {
     return new Matrix(n,m, {mapper})
   }
 
-  transpose() {
+  forEach(fn) {
+    for(let i=0; i < this.rowsSize ; i++) {
+      for(let j=0; j < this.columnsSize ; j++) {
+        fn(this.cell(i,j), [i,j], this.matrix)
+      }
+    }
+  }
 
+  transpose() {
     const [n,m] = this.size;
     const mapper = (i,j) => this.cell(j,i)
     return new Matrix(m,n, {mapper})

@@ -63,7 +63,7 @@ describe('Matrix operations', () => {
     })
   })
 
-  describe('map' , () => {
+  describe('Map' , () => {
     it('should call the mapper function with the cell value, indexes and the matrix itself', () => {
       const mock = jest.fn();
       const originalMat = new Matrix(2,2);
@@ -80,6 +80,29 @@ describe('Matrix operations', () => {
       const mat = originalMat.map(fn);
       expect(mat).not.toBe(originalMat)
       expect(mat.build()).toEqual([[1, 2], [2, 3]])
+    })
+  })
+
+  describe('ForEach' , () => {
+    it('should iterate over all the matrix and call the function supplied', () => {
+      const mock = jest.fn();
+      const originalMat = new Matrix(3,3);
+      originalMat.forEach(mock);
+      expect(mock).toHaveBeenCalledTimes(9)
+      expect(mock).toHaveBeenLastCalledWith(originalMat.cell(2,2),[2,2],expect.anything())
+    })
+  })
+
+  describe('Iterator' , () => {
+    it('should have the ability to act as an iterator and return each row', () => {
+      const mat = new Matrix(6,3);
+      let counter = 0;
+      for(let row of mat) {
+        counter++
+        expect(row).toEqual([1,1,1])
+        expect(row).toBeInstanceOf(Array)
+      }
+      expect(counter).toBe(6)
     })
   })
 
