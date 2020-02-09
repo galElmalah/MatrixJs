@@ -168,8 +168,31 @@ describe('Matrix operations', () => {
       mat = new Matrix(3,3);
       by = new Matrix(4,2)
       expect(() => mat.multiply(by)).toThrow(RangeError)
-
     })
   })
+
+  describe('SubMatrix' , () => {
+    it('should throw error for invalid boundaries', () => {
+      const mat = new Matrix(2,3);
+      expect(() => mat.subMatrix([0,2], [0,2])).toThrow(RangeError)
+      expect(() => mat.subMatrix([0,1], [0,-2])).toThrow(RangeError)
+      expect(() => mat.subMatrix([0,1], [0,3])).toThrow(RangeError)
+    })
+
+    it('should create a sub matrix from the boundaries provided', () => {
+      const mat = new Matrix(3,3, {mapper: (i,j) => `(${i},${j})`});
+      const subMatrix = mat.subMatrix([0,2],[0,2]);
+      expect(subMatrix.matrix).toEqual([["(0,0)","(0,1)"],["(1,0)","(1,1)"]])
+    })
+
+    it('should create a sub matrix from the boundaries provided - complex', () => {
+      const mat = new Matrix(10,10, {mapper: (i,j) => `(${i},${j})`});
+      Object.freeze(mat.matrix)
+      const subMatrix = mat.subMatrix([2,5],[2,5]);
+      expect(subMatrix).not.toBe(mat)
+      expect(subMatrix.matrix).toEqual([["(2,2)", "(2,3)", "(2,4)" ],["(3,2)", "(3,3)", "(3,4)"], ["(4,2)", "(4,3)", "(4,4)"]])
+    })
+  })
+
 
 })

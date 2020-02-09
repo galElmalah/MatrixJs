@@ -29,7 +29,7 @@ class Matrix {
       for(let j=0; j < this.columnsSize ; j++) {
         column[j] = mapper(i,j)
       }
-      this._matrix [i] = column;
+      this._matrix[i] = column;
     }
     return this._matrix ;
   }
@@ -72,9 +72,8 @@ class Matrix {
       })
     }
   }
-
-
-  plus(matrixTwo) {
+ 
+  plus(matrixTwo, operator) {
     if(!this.hasTheSameSize(matrixTwo)) {
       throw new Error(`Mismatch matrix sizes.\ncannot add two matrixes of sizes: mat1 -> ${this.size} :::: mat2 -> ${matrixTwo.size}  `)
     }
@@ -83,7 +82,7 @@ class Matrix {
     return new Matrix(n,m, {mapper})
   }
 
-  minus(matrixTwo) {
+  minus(matrixTwo, operator) {
     if(!this.hasTheSameSize(matrixTwo)) {
       throw new Error(`Mismatch matrix sizes.\ncannot subtract two matrixes of sizes: mat1 -> ${this.size} :::: mat2 -> ${matrixTwo.size}  `)
     }
@@ -112,7 +111,7 @@ class Matrix {
     return new Matrix(m,n, {mapper})
   }
 
-  _matrixMultiplication(by) {
+  _matrixMultiplication(by, operator) {
     if(this.columnsSize !== by.rowsSize) {
       throw new RangeError("Cannot multiply matrixes if the row and col sizes are not equal")
     }
@@ -124,10 +123,10 @@ class Matrix {
       return cell;
     }
 
-    return new Matrix(this.rowsSize,by.columnsSize, {mapper})
+    return new Matrix(this.rowsSize, by.columnsSize, {mapper})
   }
 
-  multiply(by) {
+  multiply(by, operator) {
 
     if(typeof by === 'number') {
       const [n,m] = this.size;
@@ -140,6 +139,48 @@ class Matrix {
 
     throw new TypeError('Cannot multiply with a value that inst a "number" or another Matrix')
    
+  }
+
+  validateSubMatrixIndexPair(start, end, matrixSize, comparing) {
+    if(start > end) {
+      throw new RangeError(`The start ${comparing} cant be bigger than the end ${comparing}`)
+    }
+    if(start < 0) {
+      throw new RangeError(`The start ${comparing} cant be smaller than zero`)
+    }
+    if(end > matrixSize)  {
+      throw new RangeError(`The end ${comparing} cant be bigger than the total amount of ${comparing} in the matrix`)
+    }
+  }
+
+  validateSubMatrixIndexes(startFromRow, untilRow, startFromColumn, untilColumn) {
+    this.validateSubMatrixIndexPair(startFromRow, untilRow, this.rowsSize - 1, 'row');
+    this.validateSubMatrixIndexPair(startFromColumn, untilColumn, this.columnsSize - 1, 'column'); 
+  }
+
+  calcSubMatrixSize(start, end){
+    return end - start;
+  }
+
+  buildSubMatrix(startFromRow, untilRow, startFromColumn, untilColumn) {
+    const subMatrix = []
+
+    for(let i = startFromRow; i < untilRow; i++) {
+      let column = []
+      for(let j = startFromColumn; j<untilColumn; j++){
+        column.push(this.cell(i,j))
+      }
+      subMatrix.push(column)
+    }
+    return subMatrix
+  }
+
+  subMatrix([startFromRow, untilRow], [startFromColumn, untilColumn]){
+    this.validateSubMatrixIndexes(startFromRow, untilRow, startFromColumn, untilColumn);
+    const rowSize = this.calcSubMatrixSize(startFromRow, untilRow);
+    const columnSize = this.calcSubMatrixSize(startFromColumn, untilColumn);
+    const subMatrix = this.buildSubMatrix(startFromRow, untilRow, startFromColumn, untilColumn);
+    return new Matrix(rowSize, columnSize, {mapper: (i,j) => subMatrix[i][j]});
   }
 
   toString() {
