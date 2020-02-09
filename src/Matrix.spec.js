@@ -101,6 +101,32 @@ describe('Matrix operations', () => {
     })
   })
 
+  describe('Reduce' , () => {
+    it('should call the reduce function', () => {
+      const mock = jest.fn();
+      const originalMat = new Matrix(3,3);
+      originalMat.reduce(mock, 0);
+      expect(mock).toHaveBeenCalledTimes(9)
+    })
+
+    it('should reduce the matrix to a single value', () => {
+      const originalMat = new Matrix(3,3);
+      originalMat.reduce((a,b) => a+b, 0);
+      expect(originalMat.reduce((a,b) => a+b, 0)).toBe(9)
+    })
+
+    it('should reduce the matrix to a single value and use the first element as the initial value if none is provided', () => {
+      let mat = new Matrix(3,3);
+      mat.reduce((a,b) => a+b);
+      expect(mat.reduce((a,b) => a+b, 0)).toBe(9)
+
+      mat = new Matrix(3,3, {mapper:(i,j)=> `(${i},${j})`});
+      expect( mat.reduce((a,b) => a+ ", " +b)).toBe("(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)")
+    })
+
+  
+  })
+
   describe('ForEach' , () => {
     it('should iterate over all the matrix and call the function supplied', () => {
       const mock = jest.fn();

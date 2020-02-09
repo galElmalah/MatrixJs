@@ -105,6 +105,16 @@ class Matrix {
     }
   }
 
+  reduce(fn, initialValue) {
+    const hasInitialValue = typeof initialValue !== 'undefined'
+    let acc = hasInitialValue ?  initialValue : this.matrix[0][0];
+    this.forEach((value, indexes, matrix) => {
+      if(!hasInitialValue && indexes[0] === 0 && indexes[1] === 0) return
+      acc = fn(acc, value,indexes, matrix)
+    })
+    return acc;
+  }
+
   transpose() {
     const [n,m] = this.size;
     const mapper = (i,j) => this.cell(j,i)
@@ -164,7 +174,6 @@ class Matrix {
 
   buildSubMatrix(startFromRow, untilRow, startFromColumn, untilColumn) {
     const subMatrix = []
-
     for(let i = startFromRow; i < untilRow; i++) {
       let column = []
       for(let j = startFromColumn; j<untilColumn; j++){
