@@ -24,7 +24,7 @@ const assertEqualRows = (firstMat, secondMat) => {
   }
 }
 
-function mergeMatrix(firstMat, secondMat, directions) {
+function mergeMatrices(firstMat, secondMat, directions) {
   const mat = [];
   const rowAdder = addRows(mat);
   const columnAdder = addColumns(mat);
@@ -63,4 +63,4 @@ function mergeMatrix(firstMat, secondMat, directions) {
   return mat
 }
 
-module.exports = mergeMatrix
+module.exports.mergeMatrices = mergeMatrices

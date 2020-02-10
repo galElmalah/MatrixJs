@@ -1,3 +1,5 @@
+const {mergeMatrices} = require('./mergeMatrices');
+
 function defaultMapper(i,j) {
   return 1
 }
@@ -190,6 +192,18 @@ class Matrix {
     const columnSize = this.calcSubMatrixSize(startFromColumn, untilColumn);
     const subMatrix = this.buildSubMatrix(startFromRow, untilRow, startFromColumn, untilColumn);
     return new Matrix(rowSize, columnSize, {mapper: (i,j) => subMatrix[i][j]});
+  }
+
+  /**
+   * 
+   * @param {Matrix} matrixToMerge 
+   * @param {string[]} directions 
+   */
+  merge(matrixToMerge, directions) {
+    const matrixTemplate = mergeMatrices(this, matrixToMerge, directions);
+    const numberOfRows = matrixTemplate.length;
+    const numberOfColumns = matrixTemplate[0].length
+    return new Matrix(numberOfRows,numberOfColumns, {mapper: (i,j) => matrixTemplate[i][j]})
   }
 
   toString() {

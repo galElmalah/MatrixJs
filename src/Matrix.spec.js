@@ -220,5 +220,21 @@ describe('Matrix operations', () => {
     })
   })
 
+  describe('Merge', () => {
+    it('should merge two matrices', () => {
+      const mat = new Matrix(3,3);
+      const matToMerge = new Matrix(3,3);
+      expect(mat.merge(matToMerge, ['top']).rowsSize).toBe(6);
+      expect(mat.merge(matToMerge, ['top','bottom']).rowsSize).toBe(9);
+      expect(mat.merge(matToMerge, ['top']).columnsSize).toBe(3);
+      expect(mat.merge(matToMerge, ['top','bottom']).columnsSize).toBe(3);
+
+      expect(mat.merge(matToMerge, ['left']).columnsSize).toBe(6);
+      expect(mat.merge(matToMerge, ['left','right']).columnsSize).toBe(9);
+      expect(mat.merge(matToMerge, ['left']).rowsSize).toBe(3);
+      expect(mat.merge(matToMerge, ['left', 'right']).rowsSize).toBe(3);
+    })
+  })
+
 
 })
