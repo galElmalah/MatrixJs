@@ -4,42 +4,56 @@ const addRows = addRowsTo => (matrix, onTop) => {
   }
 }
 
+const addColumns = addColumnsTo => (matrix, fromTheLeft) => {
+  let index = 0;
+  for(let row of matrix) {
+    const mergedRow = fromTheLeft ? [...row,...addColumnsTo[index]] : [...addColumnsTo[index], ...row]
+    addColumnsTo[index] = mergedRow;
+    index++
+  }
+}
 const assertEqualColumns = (firstMat, secondMat) => {
   if(firstMat.columnsSize !== secondMat.columnsSize) {
     throw new RangeError('cannot merge from top or bottom matrices that don\'t have the same number of columns.')
   }
 }
+  
+const assertEqualRows = (firstMat, secondMat) => {
+  if(firstMat.rowsSize !== secondMat.rowsSize) {
+      throw new RangeError('cannot merge from right or left matrices that don\'t have the same number of rows.')
+  }
+}
 
 function mergeMatrix(firstMat, secondMat, directions) {
   const mat = [];
-  const rowAdder = addRows(mat)
-  let isMatBeenAddedTo = false
+  const rowAdder = addRows(mat);
+  const columnAdder = addColumns(mat);
+  rowAdder(firstMat);
 
   const top = () => {
     assertEqualColumns(firstMat, secondMat)
-    if(!isMatBeenAddedTo ) {
-      rowAdder(secondMat);
-      rowAdder(firstMat);
-      isMatBeenAddedTo = true;
-      return;
-    }
     rowAdder(secondMat, true);
   }
 
   const bottom = () => {
     assertEqualColumns(firstMat, secondMat)
-    if(!isMatBeenAddedTo) {
-      rowAdder(firstMat);
-      rowAdder(secondMat);
-      isMatBeenAddedTo = true;
-      return;
-    }
     rowAdder(secondMat);
   }
 
+  const left = () => {
+    assertEqualRows(firstMat, secondMat)
+    columnAdder(secondMat, true);
+  }
+
+  const right = () => {
+    assertEqualRows(firstMat, secondMat)
+    columnAdder(secondMat);
+  }
   const mergers = {
     top,
-    bottom
+    bottom, 
+    left,
+    right
   }
 
   directions.forEach(mergeDirection => {
