@@ -236,5 +236,4 @@ describe('Matrix operations', () => {
     })
   })
 
-
 })
