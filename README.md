@@ -7,6 +7,8 @@ An easy to use Matrix library
 npm i -s easy-matrix
 ```
 
+
+
 ### Basic example
 Lets look at a common use case of adding two matrices
 ```javascript

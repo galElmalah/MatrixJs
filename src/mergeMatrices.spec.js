@@ -56,4 +56,12 @@ describe('mergeMatrices', () => {
     expect(() => mergeMatrices(matOne,matTwo, ['right'])).toThrow(RangeError)
   })
 
+  it('should not allow illegal merge directions', () => {
+    const matOne = new Matrix(3,3, {mapper:(i,j) => i+j});
+    const matTwo = new Matrix(3,3);
+    expect(() => mergeMatrices(matOne,matTwo, ['left', 'top'])).toThrow(Error);
+    expect(() => mergeMatrices(matOne,matTwo, ['top', 'top', 'left'])).toThrow(Error);
+    expect(() => mergeMatrices(matOne,matTwo, ['top', 'bottom', 'right'])).toThrow(Error);
+  })
+
 })

@@ -24,28 +24,43 @@ const assertEqualRows = (firstMat, secondMat) => {
   }
 }
 
+const throwOnIllegalMergeCombos = (mergedFromDirections, oppositeMerge) => {
+  if(mergedFromDirections.has(oppositeMerge)) {
+    throw new Error('cannot merge vertical after an horizontal or the opposite merge has been done.\nthis usually mean you had an illegal combo in your directions argument.')
+  }
+}
+
 function mergeMatrices(firstMat, secondMat, directions) {
   const mat = [];
+  const mergedFromDirections = new Map();
   const rowAdder = addRows(mat);
   const columnAdder = addColumns(mat);
   rowAdder(firstMat);
 
   const top = () => {
-    assertEqualColumns(firstMat, secondMat)
+    throwOnIllegalMergeCombos(mergedFromDirections, 'horizontal');
+    mergedFromDirections.set('vertical', true);
+    assertEqualColumns(firstMat, secondMat);
     rowAdder(secondMat, true);
   }
 
   const bottom = () => {
-    assertEqualColumns(firstMat, secondMat)
+    throwOnIllegalMergeCombos(mergedFromDirections, 'horizontal');
+    mergedFromDirections.set('vertical', true);    
+    assertEqualColumns(firstMat, secondMat);
     rowAdder(secondMat);
   }
 
   const left = () => {
+    throwOnIllegalMergeCombos(mergedFromDirections, 'vertical');
+    mergedFromDirections.set('horizontal', true);    
     assertEqualRows(firstMat, secondMat)
     columnAdder(secondMat, true);
   }
 
   const right = () => {
+    throwOnIllegalMergeCombos(mergedFromDirections, 'vertical');
+    mergedFromDirections.set('horizontal', true);    
     assertEqualRows(firstMat, secondMat)
     columnAdder(secondMat);
   }
