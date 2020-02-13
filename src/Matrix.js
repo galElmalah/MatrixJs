@@ -36,6 +36,16 @@ class Matrix {
     return this._matrix ;
   }
 
+  initializeFromMatrix(matrix) {
+    this.rowsSize = matrix.length;
+    this.columnsSize = matrix[0].length;
+    if(!matrix.every(row => row.length === this.columnsSize)) {
+      throw new Error("matrix cannot have different row lengths (amount of columns)")
+    }
+    this._matrix = matrix.map(row => [...row]);
+    return this;
+  }
+
   hasTheSameSize(matrixTwo) {
     return this.size[0] === matrixTwo.size[0] && this.size[1] === matrixTwo.size[1]
   }

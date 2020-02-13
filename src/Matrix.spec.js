@@ -9,6 +9,15 @@ describe('Matrix', () => {
     expect(matrix.matrix).toEqual([[1,1,1,1],[1,1,1,1],[1,1,1,1]])
   })
 
+  it('should build matrix from a given matrix', () => {
+    const row = [2,2]
+    const readyMat = [[1,1], row]
+    const mat = new Matrix().initializeFromMatrix(readyMat);
+    expect(mat.size).toEqual([2,2])
+    expect(mat.matrix).toEqual([[1,1],[2,2]])
+    expect(mat.matrix[1]).not.toBe(row)
+  })
+
   it('should map the matrix correctly', () => {
     const rows = 2;
     const column = 2;
@@ -235,5 +244,6 @@ describe('Matrix operations', () => {
       expect(mat.merge(matToMerge, ['left', 'right']).rowsSize).toBe(3);
     })
   })
+
 
 })
